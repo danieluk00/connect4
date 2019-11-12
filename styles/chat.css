@@ -1,0 +1,153 @@
+
+.chat{
+    position: absolute;
+    margin:2px;
+    top:3%;
+    right:3%;
+    border-radius: 10px;
+    border-color: grey;
+    border-style: solid;
+    border-width: 1px;
+    background:#e6f0ff;
+    padding:3px;
+    text-align:right;
+    margin-bottom:35px;
+    }
+
+@media (max-width: 950px) {
+    .chat{
+        position:relative;
+        bottom:0%;
+        right:0%;
+        margin-top:-15px;
+    }
+}
+  
+.chat-inner{
+    display:flex;
+    flex-direction: column;
+    width:250px;
+    height:400px;
+    text-align:left;
+}
+
+@media (max-width:950px) {
+    .chat{
+        margin-left:10px;
+        margin-right:10px;
+    }
+}
+
+@media (min-width:1151px) and (max-width: 1220px) {
+    .chat-inner{
+        width:220px;
+    }
+}
+@media (min-width:1021px) and (max-width: 1150px) {
+    .chat-inner{
+        width: 200px;
+    }
+}
+@media (min-width:951px) and (max-width: 1020px) {
+    .chat-inner{
+        width: 160px;
+    }
+}
+@media (min-width:551px) and (max-width: 950px) {
+    .chat-inner{
+        width:500px;
+        height:100px;
+    }
+    .chat{
+        margin-bottom:20px;
+    }
+}
+@media (min-width:401px) and (max-width: 550px) {
+    .chat-inner{
+        width:360px;
+        height:100px;
+    }
+}
+@media (min-width:321px) and (max-width: 400px) {
+    .chat-inner{
+        width:280px;
+        height:100px;
+    }
+}
+@media (max-width: 320px) {
+    .chat-inner{
+        width:220px;
+        height:100px;
+    }
+}
+
+  .chat-input{
+    border-width:2px;
+    border-color:#909090;
+  }
+
+  .chat-form{
+    display:flex;
+    flex-direction: row;
+    margin:5px;
+  }
+
+  .chat-btn{
+    background: black;
+    color: white;
+    outline: none !important;
+    box-shadow: none !important;
+  }
+
+  .messages{
+      height:100%;
+      margin:5px;
+      overflow:auto;
+  }
+
+.chat-name{
+    font-weight:bold;
+    font-size:0.6em
+}
+
+  @media (max-width: 900px) {
+    .messages{
+        margin-top:2px;
+    }
+    .chat-name{
+        font-size: 1em;
+        margin-right:10px;
+    }
+    .chat-display{
+        display:flex;
+        flex-direction: row;
+    }
+  }
+
+  .chat-yellow{
+      color: #e6b800;
+  }
+
+  .chat-red{
+      color:red;
+  }
+
+  .chat-display{
+      margin-bottom:10px;
+  }
+
+  @media (max-width:1100px) {
+    .chat-display{
+        margin-bottom:2px;
+    }
+    .chat{
+        font-size:0.8em;
+    }
+  }
+
+  .chat-btn{
+    background:#009BA0;
+    border-width:2px;
+    border-color:#909090;
+    border-radius: 4px;
+    }

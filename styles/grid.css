@@ -1,1 +1,103 @@
+.grid-wrapper{
+    display:flex;
+    flex-direction: column;
+  }
 
+  .grid{
+    display:flex;
+    flex-direction: row;
+    border-radius:20px;
+    background:#011993;
+    align-self:center;
+    padding:10px;
+    margin-bottom:10px;
+  }
+
+  .grid-col{
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  @media (min-width:1200px) {
+    .grid-col:hover{
+      opacity:0.92;
+    }
+  }
+
+  .grid-cell{
+    margin:0.5px;
+    height:80px;
+    width:80px;
+    background:white;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 40px;
+  }
+
+  /* Resize counters on smaller screens */
+  @media (min-width:1101px) and (max-width: 1600px) {
+    .grid-cell{
+      height:65px;
+      width:65px;
+    }
+  }
+
+  @media (min-width:751px) and (max-width: 1100px) {
+    .grid-cell{
+      height:62px;
+      width:62px;
+    }
+  }
+
+  @media (min-width:500px) and (max-width: 750px) {
+    .grid-cell{
+      height:60px;
+      width:60px;
+    }
+  }
+
+  @media (min-width:400px) and (max-width: 550px) {
+    .grid-cell{
+      height:42px;
+      width:42px;
+    }
+  }
+
+  @media (min-width:321px) and (max-width:399px) {
+    .grid-cell{
+      height:32px;
+      width:32px;
+    }
+  }
+
+  @media (max-width:320px) {
+    .grid-cell{
+      height:25px;
+      width:25px;
+    }
+  }
+
+  .highlight{
+    background: #A3FCFF
+  }
+
+  .counter{
+    width:90%;
+    height:90%;
+  }
+
+  .overlay {
+    position: fixed; /* Sit on top of the page content */
+    width: 100%; /* Full width (cover the whole page) */
+    height: 100%; /* Full height (cover the whole page) */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+    z-index: 2; /* Specify a stack order in case you're using a different order for other elements */
+    cursor: pointer; /* Add a pointer on hover */
+  }

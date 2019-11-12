@@ -1,0 +1,31 @@
+/* Header and title */
+  
+.header{
+    padding-top:40px;
+  }
+  
+  .title{ /* "Connect 4" */
+    color: white;
+    font-size:40;
+    text-shadow: 2px 2px 4px #000000;
+    margin-bottom:25px;
+  }
+
+@media (max-width:1600px) {
+  .header{
+    padding-top:10px;
+  }
+  .title{
+    margin-bottom:10px;
+  }
+}
+  
+  .r-wins{ /* "Shadow on title when red wins" */
+    color: white;
+    text-shadow: 2px 2px 4px red;
+  }
+  
+  .y-wins{ /* "Shadow on title when yellow wins" */
+    color: white;
+    text-shadow: 3px 3px 5px #D9A307;
+  }

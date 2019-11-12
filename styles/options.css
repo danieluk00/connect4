@@ -1,0 +1,199 @@
+  /* Options card */
+
+.card {
+    margin:5px;
+    display:flex;
+    flex-direction: column;
+    margin-top:20px;
+    width:500px;
+    text-align: center;
+    align-self: center;
+    margin-bottom:20px;
+  }
+
+  .card-body{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+  }
+
+    .card-body{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+  }
+
+  /* Options */
+
+  .red-yellow-div{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  @media (max-width: 500px) {
+    .red-yellow-div{
+        flex-direction: column !important;  
+    }
+  }
+
+  .red-yellow-sub-div{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .starting-colour{
+    display:flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+  }
+
+  .radio-options {
+    display:flex;
+    flex-direction: row;
+    justify-content: space-around;
+  }
+
+  @media (max-width:400px) {
+    .radio-options {
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .slider-label{
+      font-size:12px;
+      padding:0px !important;
+    }
+  }
+
+  .option-background{
+    min-height:50px;
+  }
+
+  .expanded-option-group{
+    margin-top:20px;
+  }
+  
+  .btn-lg {
+    margin-bottom:10px;
+  }
+
+  .btn {
+    width:180px;
+  }
+
+  .versus{
+    padding-left:10px;
+    padding-right:10px;
+  }
+
+  /* More options icon */
+
+  .icondiv{
+    text-align: center;
+  }
+  
+  .expand-options-icon{
+    color: #858585;
+    background:#E8EBEB;
+    opacity:0.7;
+    margin-bottom:25px;
+    height:30px;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    margin-left:-20px;
+    margin-right:-20px;
+  }
+
+  @media (max-width: 500px) {
+    .expand-options-icon{
+      opacity:1;
+    }
+  }
+
+  .expand-options-icon:hover{
+    transition: opacity .3s ease;
+    opacity:1;
+  }
+  
+  .fas{
+    padding-left:10px;
+  }
+
+  /* Expanded options */
+
+  .skilllevel{
+    background-color: #ffffe6;
+  }
+  
+  .followup{
+    background-color: #E0FFDC;
+  }
+
+  .option-group-title{
+    margin-bottom:5px;
+  }
+
+  .gridstyle{
+    background-color: #e6ffff;
+  }
+
+  .slidecontainer {
+    width: 100%; /* Width of the outside container */
+  }
+
+  .slider {
+    -webkit-appearance: none;  /* Override default CSS styles */
+    appearance: none;
+    width: 60%; /* Full-width */
+    height: 10px; /* Specified height */
+    background: #d3d3d3; /* Grey background */
+    outline: none; /* Remove outline */
+    opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+    -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+    transition: opacity .2s;
+  }
+
+  .greyedout{
+    opacity:0.3;
+  }
+
+/* Start button */
+
+  .start-button:hover{
+    transition: transform .5s ease;
+    transform: scale(1.1);
+  }
+
+/* Play Again button */
+
+.play-again{
+  align-self: center;
+  min-width:200px;
+  width:95%;
+}
+
+/* Online options */
+
+.joininputbox{
+  display:flex;
+  flex-direction: row;
+}
+
+.hostcodetext{
+  color:red;
+}
+
+.joinerror{
+  color:red;
+}
+
+.enternamebox{
+  display:flex;
+  flex-direction: row;
+}
