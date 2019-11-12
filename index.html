@@ -1,0 +1,271 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+    <link rel="stylesheet" href="styles/styles.css">
+    <link rel="stylesheet" href="styles/grid.css">
+    <link rel="stylesheet" href="styles/chat.css">
+    <link rel="stylesheet" href="styles/header.css">
+    <link rel="stylesheet" href="styles/options.css">
+
+    <title>Connect 4</title>
+</head>
+<body onload="onLoad()" class="body">
+
+    <div class="overlay hidden">
+    </div>
+
+    <div class="container">
+
+        <header class="header text-center">
+            <h1 class="title">Connect 4</h1>
+            <h3><span class="badge badge-pill badge-danger hidden">Red's turn</span></h3>
+            <h3><span class="badge badge-pill lefttotal hidden" style="margin-right:5px">Red's turn</span><span class="badge badge-pill righttotal hidden" style="margin-left:5px">Red's turn</span></h3>
+        </header>
+
+        <div class="grid-wrapper">
+            <div class="grid hidden">
+                <div class="grid-col col0">
+                    <div class="grid-cell row0"></div>
+                    <div class="grid-cell row1"></div>
+                    <div class="grid-cell row2"></div>
+                    <div class="grid-cell row3"></div>
+                    <div class="grid-cell row4"></div>
+                    <div class="grid-cell row5"></div>
+                    <div class="grid-cell row6"></div>
+                    <div class="grid-cell row7"></div>
+                </div>
+                <div class="grid-col col1">
+                    <div class="grid-cell row0"></div>
+                    <div class="grid-cell row1"></div>
+                    <div class="grid-cell row2"></div>
+                    <div class="grid-cell row3"></div>
+                    <div class="grid-cell row4"></div>
+                    <div class="grid-cell row5"></div>
+                    <div class="grid-cell row6"></div>
+                    <div class="grid-cell row7"></div>
+                </div>
+                <div class="grid-col col2">
+                    <div class="grid-cell row0"></div>
+                    <div class="grid-cell row1"></div>
+                    <div class="grid-cell row2"></div>
+                    <div class="grid-cell row3"></div>
+                    <div class="grid-cell row4"></div>
+                    <div class="grid-cell row5"></div>
+                    <div class="grid-cell row6"></div>
+                    <div class="grid-cell row7"></div>
+                </div>   
+                <div class="grid-col col3">
+                    <div class="grid-cell row0"></div>
+                    <div class="grid-cell row1"></div>
+                    <div class="grid-cell row2"></div>
+                    <div class="grid-cell row3"></div>
+                    <div class="grid-cell row4"></div>
+                    <div class="grid-cell row5"></div>
+                    <div class="grid-cell row6"></div>
+                    <div class="grid-cell row7"></div>
+                </div>
+                <div class="grid-col col4">
+                    <div class="grid-cell row0"></div>
+                    <div class="grid-cell row1"></div>
+                    <div class="grid-cell row2"></div>
+                    <div class="grid-cell row3"></div>
+                    <div class="grid-cell row4"></div>
+                    <div class="grid-cell row5"></div>
+                    <div class="grid-cell row6"></div>
+                    <div class="grid-cell row7"></div>
+                </div>
+                <div class="grid-col col5">
+                    <div class="grid-cell row0"></div>
+                    <div class="grid-cell row1"></div>
+                    <div class="grid-cell row2"></div>
+                    <div class="grid-cell row3"></div>
+                    <div class="grid-cell row4"></div>
+                    <div class="grid-cell row5"></div>
+                    <div class="grid-cell row6"></div>
+                    <div class="grid-cell row7"></div>
+                </div>
+                    <div class="grid-col col6">
+                    <div class="grid-cell row0"></div>
+                    <div class="grid-cell row1"></div>
+                    <div class="grid-cell row2"></div>
+                    <div class="grid-cell row3"></div>
+                    <div class="grid-cell row4"></div>
+                    <div class="grid-cell row5"></div>
+                    <div class="grid-cell row6"></div>
+                    <div class="grid-cell row7"></div>
+                </div>   
+                <div class="grid-col col7">
+                    <div class="grid-cell row0"></div>
+                    <div class="grid-cell row1"></div>
+                    <div class="grid-cell row2"></div>
+                    <div class="grid-cell row3"></div>
+                    <div class="grid-cell row4"></div>
+                    <div class="grid-cell row5"></div>
+                    <div class="grid-cell row6"></div>
+                    <div class="grid-cell row7"></div>
+                </div>
+            </div>
+
+            <button class="btn btn-dark btn-lg play-again hidden" onclick="resetGame()">Play again</button>
+
+            <div class="chat hidden">
+                <i class="far fa-comments chat-icon fa-2x"></i>
+                <div class="chat-inner hidden">
+                    <div class="messages">
+                    </div>
+                    <form class="chat-form">
+                        <input class="chat-input form-control" type="text" name="message" autocomplete="off">
+                        <button type="submit" class="chat-btn" value="Send" style="margin-left:2px"><i class="far fa-paper-plane"></i></button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="card">
+            <h5 class="card-header">Choose your options</h5>
+            <div class="card-body">
+
+                <div class="form-group starting-colour" name="starting">
+                    <div class="red-yellow-div">
+                        <div class="red-yellow-sub-div">
+                            <button type="button" class="btn btn-danger btn-lg">Player</button>
+                            <div class="form-check form-check-inline h4 font-weight-light">
+                                <input class="form-check-input start-radio" type="radio" name="starting" id="redstart" value="true" checked="true">
+                                <label class="form-check-label h6 font-weight-light" for="defaultCheck1">Red to start</label>
+                            </div>
+                        </div>
+                        <div class="h4 font-weight-light versus">vs</div>
+                        <div class="red-yellow-sub-div">
+                            <a class="btn btn-warning btn-lg dropdown-toggle yellow-btn" href="#" role="button" id="dropdownmenulink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Computer</a>
+                            <div class="dropdown-menu" aria-labelledby="dropdownmenulink">
+                                <a class="dropdown-item" onclick="yellowPlayer('Player')">Player</a>
+                                <a class="dropdown-item" onclick="yellowPlayer('Computer')">Computer</a>
+                            </div>
+                            <div class="form-check form-check-inline h4 font-weight-light">
+                                <input class="form-check-input start-radio" type="radio" name="starting" id="yellowstart" value="true">
+                                <label class="form-check-label h6 font-weight-light" for="defaultCheck1">Yellow to start</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    
+                <p class="expand-options-icon">More options<i class="fas fa-chevron-circle-down fa-check" title="More options"></i></p>
+
+                <div class="hiddenoptions hidden">
+                
+                    <div class="skilllevel option-background expanded-option-group">
+                        <label for="skilllevel" style="padding-right:15px">Computer Skill Level</label>
+                        <div>
+                            <label class="slider-label" style="padding-right:10px">Weak</label>
+                            <input type="range" min="1" max="3" value="3" class="slider" id="skill">
+                            <label class="slider-label" style="padding-left:10px">Strong</label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group followup option-background expanded-option-group">       
+                        <div class="option-group-title">Who starts follow up games?</div>      
+                        <div class="radio-options" style="margin-left:40px; margin-right:40px">
+                            <div class="form-check form-check-inline h4 font-weight-light">
+                                <input class="form-check-input" type="radio" name="followup" id="alternate" value="true" checked="true">
+                                <label class="form-check-label h6 font-weight-light" for="defaultCheck1">Alternate turns</label>
+                            </div>
+                            <div class="form-check form-check-inline h4 font-weight-light">
+                                <input class="form-check-input" type="radio" name="followup" id="winnerstarts" value="true">
+                                <label class="form-check-label h6 font-weight-light" for="defaultCheck1">Previous winner</label>
+                            </div>
+                            <div class="form-check form-check-inline h4 font-weight-light">
+                                <input class="form-check-input" type="radio" name="followup" id="loserstarts" value="true">
+                                <label class="form-check-label h6 font-weight-light" for="defaultCheck1">Previous loser</label>
+                            </div>
+                        </div>             
+                    </div>
+
+                </div> 
+
+                <div class="start-button-div">
+                    <button type="button" class="btn btn-primary btn-lg start-button" onclick="startGame()">START</button>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="card online hidden">
+            <h5 class="card-header">Play online against a friend</h5>
+            <div class="card-body">
+                <div class="form-group hostorjoin" name="starting">
+                    <form class="enternametext text-center text-muted" autocomplete="off">
+                        <label for="name">Enter your name:</label>
+                        <input type="text" name="name" maxlength="20" class="form-control p-2 text-center">
+                    </form>
+                    <div class="red-yellow-div">
+                        <div class="red-yellow-sub-div">
+                            <button type="button" class="btn btn-danger btn-lg btn-host" onclick="hostGame()" disabled="true">Host game</button>
+                        </div>
+                        <div class="h4 font-weight-light versus">or</div>
+                        <div class="red-yellow-sub-div">
+                            <button type="button" class="btn btn-warning btn-lg btn-join" onclick="joinGame()" disabled="true">Join game</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="hostcode hidden">
+                    <h6>Give this code to the other player:</h6>
+                    <h2 class="hostcodetext">Code</h2>
+                </div>
+                <div class="joincode hidden">
+                    <form class="h5 joincodetext text-center" autocomplete="off">
+                        <label for="code">Enter the code given by the host player:</label>
+                        <div class="joininputbox">
+                            <input type="text" name="code" class="form-control p-4 text-center">
+                            <button type="button" class="btn btn-warning" style="margin-left:10px" onclick="joinCodeEntered()">Join game</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+            
+        </div>
+
+        <div>
+            <p class="textlink" style="padding-left:20px; padding-right:20px"><a href="#" onclick="switchMode('online')">Switch to online mode</a></p>        
+        </div>
+    
+    </div>
+
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/6.6.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/6.6.0/firebase-firestore.js"></script>
+
+    <script>
+        // Your web app's Firebase configuration
+        var firebaseConfig = {
+            apiKey: "AIzaSyAS3JaRqJIMNx4PZ5vRj2F4PTzYxDfiV0w",
+            authDomain: "connect4uk00.firebaseapp.com",
+            databaseURL: "https://connect4uk00.firebaseio.com",
+            projectId: "connect4uk00",
+            storageBucket: "connect4uk00.appspot.com",
+            messagingSenderId: "207576215167",
+            appId: "1:207576215167:web:f6565b7025d7c04349994a"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+    </script>
+
+  <script src="scripts/app.js"></script>
+  <script src="scripts/options.js"></script>
+  <script src="scripts/remote.js"></script>
+  <script src="scripts/game_logic.js"></script>
+  <script src="scripts/comp_move.js"></script>
+  <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU=" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+</body>
+</html>
