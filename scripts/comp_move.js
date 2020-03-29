@@ -354,9 +354,9 @@ const randomMove = () => { //Keep trying until we find a free column!
     while(true) {
         computerAttempts++;
 
-        if (movesTaken<=6) {
+        if (turnsTaken<=6) {
             col = Math.floor(Math.random() * (4 - 3) + 3);
-        } else if (computerAttempts<=25) {
+        } else if (computerAttempts<=1) {
             col = Math.floor(Math.random() * (5 - 2) + 2);
         } else {
             col = Math.floor(Math.random() * (totalCols + 1));
