@@ -115,7 +115,7 @@ const computerMove = () => {
             });
         };
 
-        tryStandard(2,"Y",-1,true)
+        //tryStandard(2,"Y",-1,true)
 
         //Go random
         randomMove();
@@ -354,7 +354,13 @@ const randomMove = () => { //Keep trying until we find a free column!
     while(true) {
         computerAttempts++;
 
-        col = Math.floor(Math.random() * (totalCols + 1));
+        if (movesTaken<=6) {
+            col = Math.floor(Math.random() * (4 - 3) + 3);
+        } else if (computerAttempts<=25) {
+            col = Math.floor(Math.random() * (5 - 2) + 2);
+        } else {
+            col = Math.floor(Math.random() * (totalCols + 1));
+        }
 
         if (gridArray[0][col]=="B" || gridArray[0][col]=="F") {
 

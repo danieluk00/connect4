@@ -54,7 +54,7 @@ let totalRedWins=0, totalYellowWins=0; //Set once per session
 let started, skillLevel, players, alternateGames, winnerStarts, winner="", loser="", winerFull="", loserFull="", winFound=false, roundNumber=1, redTotal, yellowTotal; //Set once per game
 let gridArray=[]; gameOver=true, turnsTaken=0, turn="R", playerTurn=true, movesTaken=0; //Current state of play, will change during game
 let hostCode, onlineGame=false, onlineRole, onlineGameState, thisplayer='R', callCount=0, redName="", yellowName="", yourName="", opponentName="", joinEvent=false, hostEvent=false, joinID="", hostID=""; //Online game variables
-let debug=false; //Debugging
+let debug=true; //Debugging
 
 const onLoad = () => {
     gridArray = setUpGrid();
