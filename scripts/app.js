@@ -119,7 +119,6 @@ const revertTitle = () => {
             document.querySelector('.body').classList.add('waiting');
         }
     }
-
 }
 
 const animateGridOut = () => {
@@ -178,11 +177,11 @@ const useTestValues = () => {
     gridArray.push(["B","B","B","B","B","B","B","B"]);
     gridArray.push(["B","B","B","B","B","B","B","B"]);
     gridArray.push(["B","B","B","B","B","B","B","B"]);
-    gridArray.push(["B","B","B","B","B","B","B","B"]);
-    gridArray.push(["B","B","B","B","B","B","B","B"]);
-    gridArray.push(["B","B","B","B","B","B","B","B"]);
-    gridArray.push(["B","B","B","F","F","B","B","B"]);
-    gridArray.push(["F","F","F","Y","Y","F","F","F"]);
+    gridArray.push(["B","F","F","B","B","F","B","B"]);
+    gridArray.push(["B","Y","R","F","F","R","B","B"]);
+    gridArray.push(["B","Y","R","R","Y","Y","F","B"]);
+    gridArray.push(["B","R","Y","Y","R","Y","R","F"]);
+    gridArray.push(["F","R","Y","R","Y","Y","R","R"]);
 
     addTestValuesToGrid();
 }

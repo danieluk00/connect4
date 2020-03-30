@@ -1,6 +1,6 @@
 //THIS FILE CONTAINS THE COMPUTER PLAYER LOGIC
 
-let compPicked=-1, compPickComplete=false, colsToAvoid=[], snookeredCols=[], randomVar, minValue, tempArray=[];
+let compPicked=-1, compPickComplete=false, colsToAvoid=[], snookeredColsR=[], snookeredColsY=[], randomVar, minValue, tempArray=[];
 const delayBetweenTries =1000;
 
 //Create array of all the potential moves which would enable a red win the following move
@@ -35,51 +35,76 @@ const addColToAvoid = (col) => col>=0 ? colsToAvoid.push(col) : "";
 
 const snookered = () => {
 
-    snookeredCols=[];
+    snookeredColsY=[];
+    snookeredColsR=[];
+
     for (let col=0; col<=totalCols; col++) { //For each column...
 
-        let row=getFreeRow(col);
-        if (row<0) {continue};
+        for (let i=0; i<=1; i++) {
 
-        //Test change
-        setGridArray(row,col,"Y");
-        setGridArray(row-1,col,"F");
+            //For each column, test yellow and red
+            let colour = i==0 ? 'Y' : 'R';
 
-        //See if 4 reds is possible in any direction
+            let row=getFreeRow(col);
+            if (row<0) {continue};
 
-        for (coli=0; coli<totalCols; coli++) {
-            if (tryHorizontal(4,"Y",coli,false) >-1) {
-                addSnookeredCol(col)
-            }
-        }
-        for (coli=0; coli<totalCols; coli++) {
-            if (tryVertical(4,"Y",coli,false) >-1) {
-                addSnookeredCol(col)
-            }
-        }
-        for (coli=0; coli<totalCols; coli++) {
-            if (tryDiagonalUp(4,"Y",coli,false) >-1) {
-                addSnookeredCol(col)
-            }
-        }
-        for (coli=0; coli<totalCols; coli++) {
-            if (tryDiagonalDown(4,"Y",coli,false) >-1) {
-                addSnookeredCol(col)
-            }
-        }
+            //Test change
+            setGridArray(row,col,colour);
+            setGridArray(row-1,col,"F");
 
-        //Undo the test change
-        setGridArray(row,col,"F");
-        setGridArray(row-1,col,"B");
+            //See if 4 yellows is possible in any direction
+            for (coli=0; coli<totalCols; coli++) {
+                if (tryHorizontal(4,colour,coli,false) >-1) {
+                    log(colour+' snooker horizontal '+col)
+                    addSnookeredCol(col, colour)
+                }
+            }
+            for (coli=0; coli<totalCols; coli++) {
+                if (tryVertical(4,colour,coli,false) >-1) {
+                    log(colour+' snooker vertical '+col)
+                    addSnookeredCol(col, colour)
+                }
+            }
+            for (coli=0; coli<totalCols; coli++) {
+                if (tryDiagonalUp(4,colour,coli,false) >-1) {
+                    log(colour+' snooker diagup '+col)
+                    addSnookeredCol(col, colour)
+                }
+            }
+            for (coli=0; coli<totalCols; coli++) {
+                if (tryDiagonalDown(4,colour,coli,false) >-1) {
+                    log(colour+' snooker diagdown '+col)
+                    addSnookeredCol(col, colour)
+                }
+            }
+
+            //Undo the test change
+            setGridArray(row,col,"F");
+            setGridArray(row-1,col,"B");
+
+        }
     }
 
-    if (snookeredCols.length>0) {log("Possible snookered cols: "+snookeredCols)};
-    return snookeredCols;
+    if (snookeredColsR.length>0) {log("Possible snookered R cols: "+snookeredColsR)};
+    if (snookeredColsY.length>0) {log("Possible snookered Y cols: "+snookeredColsY)};
+
+    return [snookeredColsY,snookeredColsR];
 }
 
-const addSnookeredCol = col => {
-    col>=0 && colsToAvoid.includes(col)==false ? snookeredCols.push(col) : "";
+const addSnookeredCol = (col, colour) => {
+    if (colour=='R') {
+        col>=0 && colsToAvoid.includes(col)==false ? snookeredColsR.push(col) : "";
+    } else {
+        col>=0 && colsToAvoid.includes(col)==false ? snookeredColsY.push(col) : "";  
+    }
 }
+
+function sleep(miliseconds) {
+    var currentTime = new Date().getTime();
+ 
+    while (currentTime + miliseconds >= new Date().getTime()) {
+    }
+ }
 
 const computerMove = () => {
     log("Running through computer moves");
@@ -91,7 +116,11 @@ const computerMove = () => {
 
     //Create array of columns to avoid
     colsToAvoid = randomVar==100 ? findColsToAvoid() : [];
-    snookeredCols = snookered()
+    snookered();
+    //let snookeredCols = snookered()
+    //snookeredColsY = snookeredCols[0]
+    //snookeredColsR = snookeredCols[1]
+
     compPicked==-1, compPickComplete=false;
 
     setTimeout(function() {
@@ -103,6 +132,7 @@ const computerMove = () => {
         if (randomVar>=20) {tryStandard(4,"R",-1,false)};
         if (randomVar>=40) {tryDiagonals(4,"R",-1,false)};
 
+        log('Random var' + randomVar)
         if (randomVar>=100) {
             playSnookerMove()
         };
@@ -332,18 +362,41 @@ const tryDiagonalUp = (number, colour, oneCol, enableMatters) => {
 }
 
 const playSnookerMove = () => {
-    if (snookeredCols.length <=1 || compPickComplete==true) {return;}
 
-    for (i=0; i<snookeredCols.length; i++) {
-        col = snookeredCols[i]
-        for (j=0; j<snookeredCols.length; j++) {
-            if (snookeredCols[j] == col && i!=j) {
-                log("Playing snookered col " + col)
-                compPickComplete=true;
-                return col;
+    if (snookeredColsY.length >=1 && compPickComplete==false) {
+
+        //Play a snookering yellow move
+
+        for (i=0; i<snookeredColsY.length; i++) {
+            col = snookeredColsY[i]
+            for (j=0; j<snookeredColsY.length; j++) {
+                if (snookeredColsY[j] == col && i!=j) {
+                    log("Playing snookered Y col " + col)
+                    compPickComplete=true;
+                    return col;
+                }
             }
         }
+
     }
+    
+    if (snookeredColsR.length >=1 && compPickComplete==false)  {
+
+        //Block a snookering red move
+
+        for (i=0; i<snookeredColsR.length; i++) {
+            col = snookeredColsR[i]
+            for (j=0; j<snookeredColsR.length; j++) {
+                if (snookeredColsR[j] == col && i!=j) {
+                    log("Playing snookered R col " + col)
+                    compPickComplete=true;
+                    return col;
+                }
+            }
+        }
+
+    }
+
 }
 
 const randomMove = () => { //Keep trying until we find a free column!
