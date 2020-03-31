@@ -174,14 +174,23 @@ const resetVariables = () => {
 //For testing scenarios...
 const useTestValues = () => {
     gridArray=[];
+    // gridArray.push(["B","B","B","B","B","B","B","B"]);
+    // gridArray.push(["B","B","B","B","B","B","B","B"]);
+    // gridArray.push(["B","B","B","B","B","B","B","B"]);
+    // gridArray.push(["B","F","F","B","B","F","B","B"]);
+    // gridArray.push(["B","Y","R","F","F","R","B","B"]);
+    // gridArray.push(["B","Y","R","R","Y","Y","F","B"]);
+    // gridArray.push(["B","R","Y","Y","R","Y","R","F"]);
+    // gridArray.push(["F","R","Y","R","Y","Y","R","R"]);
+
     gridArray.push(["B","B","B","B","B","B","B","B"]);
     gridArray.push(["B","B","B","B","B","B","B","B"]);
     gridArray.push(["B","B","B","B","B","B","B","B"]);
-    gridArray.push(["B","F","F","B","B","F","B","B"]);
-    gridArray.push(["B","Y","R","F","F","R","B","B"]);
-    gridArray.push(["B","Y","R","R","Y","Y","F","B"]);
-    gridArray.push(["B","R","Y","Y","R","Y","R","F"]);
-    gridArray.push(["F","R","Y","R","Y","Y","R","R"]);
+    gridArray.push(["B","B","B","B","B","B","B","B"]);
+    gridArray.push(["B","B","B","B","B","B","B","B"]);
+    gridArray.push(["B","B","B","B","B","B","B","B"]);
+    gridArray.push(["B","F","F","F","B","B","B","B"]);
+    gridArray.push(["F","Y","Y","R","F","F","F","F"]);
 
     addTestValuesToGrid();
 }
