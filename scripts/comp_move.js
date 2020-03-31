@@ -52,7 +52,7 @@ const snookered = () => {
             setGridArray(row,col,colour);
             setGridArray(row-1,col,"F");
 
-            //See if 4 yellows is possible in any direction
+            //See if 4 yellows/reds is possible in any direction
             for (coli=0; coli<totalCols; coli++) {
                 if (tryHorizontal(4,colour,coli,false) >-1) {
                     log(colour+' snooker horizontal '+col)
@@ -139,10 +139,18 @@ const computerMove = () => {
 
         //Look for 2 in a row
         if (randomVar>=50) {
-            ['R','Y'].forEach((colour)=>{
-                tryStandard(3,colour,-1,true);
-                tryDiagonals(3,colour,-1,true)
-            });
+            let twoOrder= Math.floor(Math.random() * (4 - 1)) + 1; //Number between 1 and 3
+            if (twoOrder>=2) {
+                ['Y','R'].forEach((colour)=>{
+                    tryStandard(3,colour,-1,true);
+                    tryDiagonals(3,colour,-1,true)
+                });
+            } else {
+                ['R','Y'].forEach((colour)=>{
+                    tryStandard(3,colour,-1,true);
+                    tryDiagonals(3,colour,-1,true)
+                });
+            }
         };
 
         //tryStandard(2,"Y",-1,true)
@@ -190,7 +198,7 @@ const tryVertical = (number, colour, oneCol, enableMatters) => {
         if (colsToAvoid.includes(col)==true && enableMatters==true) {continue}; //Do not bother to test columns we can't use
 
         let row=getFreeRow(col);
-        if (row<0) {continue};
+        if (row<0 || (row==0 && number==3)) {continue};
 
         let redCount=0, yellowCount=0; //Check the possibilities and add up the red and yellow counters in a row
 
@@ -248,6 +256,16 @@ const tryHorizontal = (number, colour, oneCol, enableMatters) => {
             let freeFound = (tempArray.filter(c => c == "F").length == 1);
 
             if (colourFound && freeFound) { //Check if temp array filtered on colour is correct length
+
+                //Ignore edges where three in the row is the max possible
+                if (number==3 && colour=='Y') {
+                        if (col<3 && gridArray[row][3]=='R') {continue};
+                        if (col>totalCols-3 && gridArray[row][totalCols-3]=='R') {continue};
+                } else if (number==3 && colour=='R') {
+                    if (col<3 && gridArray[row][3]=='Y') {continue};
+                    if (col>totalCols-3 && gridArray[row][totalCols-3]=='Y') {continue};
+                }
+
                 log(tempArray);
                 log("Found " + number + " horizontal " + colour + " counters in column " + col);
                 compPickComplete=true;
@@ -277,7 +295,7 @@ const tryDiagonalDown = (number, colour, oneCol, enableMatters) => {
         if (colsToAvoid.includes(col)==true && enableMatters==true) {continue};
          
         let row=getFreeRow(col); //Get row of free cell
-        if (row<0) {continue};
+        if (row<0 || (row==0 && number==3)) {continue};
 
         startx = setXY(row, col, number,'diagDown')[0];
         starty = setXY(row, col, number,'diagDown')[1];
@@ -325,7 +343,7 @@ const tryDiagonalUp = (number, colour, oneCol, enableMatters) => {
         if (colsToAvoid.includes(col)==true && enableMatters==true) {continue};
     
         let row=getFreeRow(col); //Get row of free cell
-        if (row<0) {continue};
+        if (row<0 || (row==0 && number==3)) {continue};
 
         startx = setXY(row, col, number,'diagUp')[0];
         starty = setXY(row, col, number,'diagUp')[1];
@@ -407,10 +425,8 @@ const randomMove = () => { //Keep trying until we find a free column!
     while(true) {
         computerAttempts++;
 
-        if (turnsTaken<=6) {
+        if (turnsTaken<=10 && randomVar>=80) {
             col = Math.floor(Math.random() * (5 - 3) + 3);
-        } else if (computerAttempts<=1) {
-            col = Math.floor(Math.random() * (6 - 2) + 2);
         } else {
             col = Math.floor(Math.random() * (totalCols + 1));
         }
