@@ -1,6 +1,6 @@
 //THIS FILE CONTAINS THE COMPUTER PLAYER LOGIC
 
-let compPicked=-1, compPickComplete=false, colsToAvoid=[], snookeredColsR=[], snookeredColsY=[], randomVar, minValue, tempArray=[];
+let compPicked=-1, compPickComplete=false, colsToAvoid=[], snookeredColsR=[], snookeredColsY=[], randomVar, minValue, tempArray=[], crossOver={};
 const delayBetweenTries =1000;
 
 //Create array of all the potential moves which would enable a red win the following move
@@ -99,12 +99,12 @@ const addSnookeredCol = (col, colour) => {
     }
 }
 
-function sleep(miliseconds) {
-    var currentTime = new Date().getTime();
+// function sleep(miliseconds) {
+//     var currentTime = new Date().getTime();
  
-    while (currentTime + miliseconds >= new Date().getTime()) {
-    }
- }
+//     while (currentTime + miliseconds >= new Date().getTime()) {
+//     }
+//  }
 
 const computerMove = () => {
     log("Running through computer moves");
@@ -117,9 +117,6 @@ const computerMove = () => {
     //Create array of columns to avoid
     colsToAvoid = randomVar==100 ? findColsToAvoid() : [];
     snookered();
-    //let snookeredCols = snookered()
-    //snookeredColsY = snookeredCols[0]
-    //snookeredColsR = snookeredCols[1]
 
     compPicked==-1, compPickComplete=false;
 
@@ -134,8 +131,13 @@ const computerMove = () => {
 
         log('Random var' + randomVar)
         if (randomVar>=100) {
-            playSnookerMove()
+            playSnookerMove();
         };
+    
+        crossOver={};
+        for (let ii=0; ii<=totalRows; ii++) {
+            crossOver[ii]=0;
+        }
 
         //Look for 2 in a row
         if (randomVar>=50) {
@@ -153,7 +155,8 @@ const computerMove = () => {
             }
         };
 
-        //tryStandard(2,"Y",-1,true)
+        //Play crossover move
+        playCrossOverMove();
 
         //Go random
         randomMove();
@@ -186,7 +189,6 @@ const tryDiagonals  = (number, colour, oneCol, enableMatters) => {
 }
 
 const tryVertical = (number, colour, oneCol, enableMatters) => {
-
     if (oneCol==-1 && compPickComplete==true) {return -1};
     oneCol==-1 ? log("Try vertical looking for a column of " + number + " " + colour) : "";
 
@@ -216,8 +218,11 @@ const tryVertical = (number, colour, oneCol, enableMatters) => {
 
         if (redFound || yellowFound) {
             log("Found " + number + " vertical " + colour + " counters in column " + col);
-            compPickComplete=true;
+
+            addToCrossOver(col, number)
+            if (number==4) {compPickComplete=true;}
             return col;
+
         }
     }
 
@@ -227,6 +232,7 @@ const tryVertical = (number, colour, oneCol, enableMatters) => {
 const tryHorizontal = (number, colour, oneCol, enableMatters) => {
 
     if (oneCol==-1 && compPickComplete==true) {return -1};
+
     oneCol==-1 ? log("Try horizontal looking for a row of " + number + " " + colour) : "";
 
     let minCol = setMinCol(oneCol);
@@ -259,8 +265,8 @@ const tryHorizontal = (number, colour, oneCol, enableMatters) => {
 
                 //Ignore edges where three in the row is the max possible
                 if (number==3 && colour=='Y') {
-                        if (col<3 && gridArray[row][3]=='R') {continue};
-                        if (col>totalCols-3 && gridArray[row][totalCols-3]=='R') {continue};
+                    if (col<3 && gridArray[row][3]=='R') {continue};
+                    if (col>totalCols-3 && gridArray[row][totalCols-3]=='R') {continue};
                 } else if (number==3 && colour=='R') {
                     if (col<3 && gridArray[row][3]=='Y') {continue};
                     if (col>totalCols-3 && gridArray[row][totalCols-3]=='Y') {continue};
@@ -268,7 +274,9 @@ const tryHorizontal = (number, colour, oneCol, enableMatters) => {
 
                 log(tempArray);
                 log("Found " + number + " horizontal " + colour + " counters in column " + col);
-                compPickComplete=true;
+                addToCrossOver(col, number)
+
+                if (number==4) {compPickComplete=true;}
                 return col;
             }
 
@@ -317,7 +325,8 @@ const tryDiagonalDown = (number, colour, oneCol, enableMatters) => {
 
                 log(tempArray);
                 log("Found " + number + " diagonal down " + colour + " counters in column " + col);
-                compPickComplete=true;
+                if (number==4) {compPickComplete=true;}
+                addToCrossOver(col, number)
                 return col;
 
             }
@@ -365,7 +374,8 @@ const tryDiagonalUp = (number, colour, oneCol, enableMatters) => {
 
                 log(tempArray);
                 log("Found " + number + " diagonal up " + colour + " counters in column " + col);
-                compPickComplete=true;
+                addToCrossOver(col, number)
+                if (number==4) {compPickComplete=true;}
                 return col;
 
             }
@@ -420,7 +430,7 @@ const playSnookerMove = () => {
 const randomMove = () => { //Keep trying until we find a free column!
     if (compPickComplete==true) {return -1};
 
-    let computerAttempts=0
+    let computerAttempts=0;
 
     while(true) {
         computerAttempts++;
@@ -476,4 +486,33 @@ const setXY = (row, col, number, direction) => {
     }
     return [startx, starty];
 
+}
+
+const playCrossOverMove = () => {
+
+    if (compPickComplete==true) {return;}
+
+    let selectedCol = -1;
+    let score = 0;
+
+    for (let col=0; col<=totalCols; col++) {
+        if (parseInt(crossOver[col]) > score) {
+            selectedCol = col;
+            score = (parseInt(crossOver[col]));
+        }
+    }
+
+    log('Crossover col '+selectedCol)
+
+    if (selectedCol>-1) {
+        compPickComplete=true;
+        addCounter(selectedCol);
+        return col;
+    } else {
+        return -1;
+    }
+}
+
+const addToCrossOver = (col, number) => {    
+    crossOver[col] += parseInt(crossOver[col]) + number;
 }
