@@ -53,7 +53,9 @@ const totalCols=7, totalRows=7; //Size of grid
 let totalRedWins=0, totalYellowWins=0; //Set once per session
 let started, skillLevel, players, alternateGames, winnerStarts, winner="", loser="", winerFull="", loserFull="", winFound=false, roundNumber=1, redTotal, yellowTotal; //Set once per game
 let gridArray=[]; gameOver=true, turnsTaken=0, turn="R", playerTurn=true, movesTaken=0; //Current state of play, will change during game
-let hostCode, onlineGame=false, onlineRole, onlineGameState, thisplayer='R', callCount=0, redName="", yellowName="", yourName="", opponentName="", joinEvent=false, hostEvent=false, joinID="", hostID=""; //Online game variables
+let hostCode, onlineGame=false, onlineRole, onlineGameState, thisplayer='R', callCount=0, redName="", yellowName="", yourName="", opponentName="", joinEvent=false, hostEvent=false, joinID="", hostID=""; //\Online game variables
+let winningGridR=[], winningGridY=[], winningGridRR=[], winningGridYY=[];
+let emptyCell=null;
 let debug=true; //Debugging
 
 const onLoad = () => {
@@ -90,6 +92,7 @@ const setUpGrid = () => {
     }
     gridArray.push(["F","F","F","F","F","F","F","F"]); //Free ('F') cells are empty and where a move can be placed
 
+    //Testing
     //debug==true ? useTestValues() : "";
     return gridArray;
 }
@@ -187,9 +190,9 @@ const useTestValues = () => {
     gridArray.push(["B","B","B","B","B","B","B","B"]);
     gridArray.push(["B","B","B","B","B","B","B","B"]);
     gridArray.push(["B","B","B","B","B","B","B","B"]);
-    gridArray.push(["B","B","B","B","B","B","B","B"]);
-    gridArray.push(["B","B","B","B","B","B","B","B"]);
-    gridArray.push(["B","F","F","F","B","B","B","B"]);
+    gridArray.push(["B","F","F","B","B","B","B","B"]);
+    gridArray.push(["B","Y","R","F","B","B","B","B"]);
+    gridArray.push(["B","R","R","R","B","B","B","B"]);
     gridArray.push(["F","Y","Y","R","F","F","F","F"]);
 
     addTestValuesToGrid();

@@ -32,10 +32,17 @@ const addCounter = col => {
     //Update array
     setGridArray(row,col,turn); //Fill in lowest free cell in column
     setGridArray(row-1,col,"F"); //Make cell above 'Free' (available for subsequent moves)
+
+    // if (winningGridR.includes([row,col])) {
+    //     indexOf([row,col]).splice;
+    // } else if (winningGridY.includes([row,col])) {
+    //     indexOf([row,col]).splice;
+    // }
+
     log(gridArray);
     
     setOnlineColumn(col);
-    checkWin(turn); //Check if won, otherwise change turn
+    checkWin(turn, 'WinCheck'); //Check if won, otherwise change turn
 }
 
 //Changes the turn
@@ -95,7 +102,15 @@ const updateCaptionText = () => {
 }
 
 //Check if a colour has won
-const checkWin = colour => {
+const checkWin = (colour, actual) => {
+
+    if (actual=='WinCheck') {
+        winningGridR=[];
+        winningGridY=[];
+    } else if (actual=='TestPositions') {
+        winningGridRR=[];
+        winningGridYY=[];  
+    }
 
     winFound=false;
     log('Checking for a win');
@@ -104,38 +119,66 @@ const checkWin = colour => {
         for (col=0; col<=totalCols; col++) {
 
             if (row+3<=totalRows) {
-                checkSpots([row,col],[row+1,col],[row+2,col],[row+3,col],colour);
+                checkSpots([row,col],[row+1,col],[row+2,col],[row+3,col],colour,actual);
             };
             if (col+3<=totalCols) {
-                checkSpots([row,col],[row,col+1],[row,col+2],[row,col+3],colour);
+                checkSpots([row,col],[row,col+1],[row,col+2],[row,col+3],colour,actual);
             };
             if (row+3<=totalRows && col+3<=totalCols) {
-                checkSpots([row,col],[row+1,col+1],[row+2,col+2],[row+3,col+3],colour);
+                checkSpots([row,col],[row+1,col+1],[row+2,col+2],[row+3,col+3],colour,actual);
             };
             if (row-3>=0 && col+3<=totalCols) {
-                checkSpots([row,col],[row-1,col+1],[row-2,col+2],[row-3,col+3],colour);
-            };           
+                checkSpots([row,col],[row-1,col+1],[row-2,col+2],[row-3,col+3],colour,actual);
+            };
         }
     }
 
-    (winFound || (turnsTaken==(totalRows+1)*(totalCols+1))) ? setWinner(winFound,colour) : turnChange(); //Set winner/tie, otherwise change turn
-}
+    if (actual=='WinCheck') {
+        //Set winner/tie, otherwise change turn
+        (winFound || (turnsTaken==(totalRows+1)*(totalCols+1))) ? setWinner(winFound,colour) : turnChange();
+    };
+};
 
 //Check if spot matches colour for win
-const checkSpots = (cellA,cellB,cellC,cellD,colour) => {
+const checkSpots = (cellA,cellB,cellC,cellD,colour,actual) => {
 
     let cellACheck = (gridArray[cellA[0]][cellA[1]]==colour);
     let cellBCheck = (gridArray[cellB[0]][cellB[1]]==colour);
     let cellCCheck = (gridArray[cellC[0]][cellC[1]]==colour);
     let cellDCheck = (gridArray[cellD[0]][cellD[1]]==colour);
 
-    if (cellACheck && cellBCheck && cellCCheck && cellDCheck) {
+    let redCount=0, yellowCount=0, otherCount=0;
+
+    [cellA, cellB, cellC, cellD].forEach(cell => {
+        if (gridArray[cell[0]][cell[1]]=='R') {
+            redCount++;
+        } else if (gridArray[cell[0]][cell[1]]=='Y') {
+            yellowCount++;
+        } else if (gridArray[cell[0]][cell[1]]=='B' || gridArray[cell[0]][cell[1]]=='F') {
+            otherCount++;
+            emptyCell = cellNumber(cell[0],cell[1]);
+        }
+    })
+    
+    //Populate potential winning positions
+    if (redCount==3 && yellowCount==0 && otherCount==1 && colour=='R' && actual=='WinCheck') {
+        winningGridR.push(emptyCell)
+    } else if (yellowCount==3  && redCount==0 && otherCount==1 && colour=='Y' && actual=='WinCheck') {
+        winningGridY.push(emptyCell)
+    } else if (redCount==3  && yellowCount==0 && otherCount==1 && colour=='R' && actual=='TestPositions') {
+        winningGridRR.push(emptyCell)
+    } else if (yellowCount==3  && redCount==0 && otherCount==1 && colour=='Y' && actual=='TestPositions') {
+        winningGridYY.push(emptyCell)
+    };
+
+    //Check for win and flash counters
+    if (cellACheck && cellBCheck && cellCCheck && cellDCheck && actual=='WinCheck') {
         
         [cellA,cellB,cellC,cellD].forEach((i) => flashCounter(i))
         winFound = true;
         log('Winner '+colour);
 
-    };
+    } 
 };
 
 //Set winner variables
@@ -221,15 +264,15 @@ function showTotals() {
 
 //Get lowest free row from given column
 const getFreeRow = col => {
-    let row = totalRows; //Start with bottom row in select column
+    let row = totalRows; //Start with bottom row in selected column
 
-    if (col<0 || (gridArray[0][col]!="F" && gridArray[0][col]!="B")) {return -1};
+    if (col<0 || (gridArray[0][col]!="F") && gridArray[0][col]!="B") {return -1};
 
     while (row>0 && gridArray[row][col]!="F") { //Move up column until we find a free cell
         row--;
     }
-
     return row;
+
 }
 
 //Get cell number from row, col

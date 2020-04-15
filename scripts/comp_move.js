@@ -1,7 +1,9 @@
 //THIS FILE CONTAINS THE COMPUTER PLAYER LOGIC
 
-let compPicked=-1, compPickComplete=false, colsToAvoid=[], snookeredColsR=[], snookeredColsY=[], randomVar, minValue, tempArray=[], crossOver={};
+let compPicked=-1, compPickComplete=false, colsToAvoid=[], snookeredColsR=[], snookeredColsY=[], randomVar, minValue, tempArray=[], crossOver={}
 const delayBetweenTries =1000;
+let testWinFound=false, doubleDeckerCellR, doubleDeckerCellY;
+let DDRCols=[], DDYCols=[];
 
 //Create array of all the potential moves which would enable a red win the following move
 const findColsToAvoid = () => {
@@ -13,6 +15,7 @@ const findColsToAvoid = () => {
         if (row<0) {continue};
 
         //Test change
+
         setGridArray(row,col,"Y");
         setGridArray(row-1,col,"F");
 
@@ -30,6 +33,7 @@ const findColsToAvoid = () => {
     log("Cols to avoid "+colsToAvoid);
     return colsToAvoid;
 }
+
 
 const addColToAvoid = (col) => col>=0 ? colsToAvoid.push(col) : "";
 
@@ -81,7 +85,7 @@ const snookered = () => {
             //Undo the test change
             setGridArray(row,col,"F");
             setGridArray(row-1,col,"B");
-
+            
         }
     }
 
@@ -99,13 +103,6 @@ const addSnookeredCol = (col, colour) => {
     }
 }
 
-// function sleep(miliseconds) {
-//     var currentTime = new Date().getTime();
- 
-//     while (currentTime + miliseconds >= new Date().getTime()) {
-//     }
-//  }
-
 const computerMove = () => {
     log("Running through computer moves");
 
@@ -117,8 +114,10 @@ const computerMove = () => {
     //Create array of columns to avoid
     colsToAvoid = randomVar==100 ? findColsToAvoid() : [];
     snookered();
+    doubleDeckerCheck('R');
+    doubleDeckerCheck('Y');
 
-    compPicked==-1, compPickComplete=false;
+    compPicked=-1, compPickComplete=false;
 
     setTimeout(function() {
 
@@ -132,6 +131,7 @@ const computerMove = () => {
         log('Random var' + randomVar)
         if (randomVar>=100) {
             playSnookerMove();
+            playDDMove();
         };
     
         crossOver={};
@@ -153,6 +153,10 @@ const computerMove = () => {
                     tryDiagonals(3,colour,-1,true)
                 });
             }
+            ['R','Y'].forEach((colour)=>{
+                tryStandard(2,colour,-1,true);
+                tryDiagonals(2,colour,-1,true)
+            });
         };
 
         //Play crossover move
@@ -278,6 +282,7 @@ const tryHorizontal = (number, colour, oneCol, enableMatters) => {
 
                 if (number==4) {compPickComplete=true;}
                 return col;
+
             }
 
             i++; //Count our iterations
@@ -427,6 +432,25 @@ const playSnookerMove = () => {
 
 }
 
+const playDDMove = () => {
+
+    if (compPickComplete==true) {return}
+
+    log('Trying DD Move ' + compPickComplete + ' DDR: ' + DDRCols +' DDY: ' + DDYCols)
+
+    if (DDRCols.length>=1) {
+        col = DDRCols[0]
+        log('Playing DD R col' + col);
+        compPickComplete=true;
+        return col;
+    } else if (DDYCols.length>=1) {
+        col = DDYCols[0];
+        log('Playing DD Y col' + col);
+        compPickComplete=true;
+        return col;
+    }
+}
+
 const randomMove = () => { //Keep trying until we find a free column!
     if (compPickComplete==true) {return -1};
 
@@ -444,7 +468,7 @@ const randomMove = () => { //Keep trying until we find a free column!
         if (gridArray[0][col]=="B" || gridArray[0][col]=="F") {
 
             if (col<=totalCols && (colsToAvoid.includes(col)==false || computerAttempts>100)) { //If we reach 100 attempts, then stop checking if we enable a win
-                log("Random column picked: ",col);
+                log("Random column picked: "+col);
                 return col;
             }
 
@@ -461,8 +485,6 @@ const updateTempArray = (value, number) => {
 
 const setMinCol = oneCol => oneCol==-1 ? 0 : oneCol;
 const setMaxCol = oneCol => oneCol==-1 ? totalCols : oneCol;
-
-//const totalIterations = (col,number) => Math.min(totalCols,col+number-1);
 
 const setXY = (row, col, number, direction) => {
 //Starts a maximum of 3 spots up/down and left from the free cell
@@ -493,7 +515,7 @@ const playCrossOverMove = () => {
     if (compPickComplete==true) {return;}
 
     let selectedCol = -1;
-    let score = 0;
+    let score = 2;
 
     for (let col=0; col<=totalCols; col++) {
         if (parseInt(crossOver[col]) > score) {
@@ -515,4 +537,88 @@ const playCrossOverMove = () => {
 
 const addToCrossOver = (col, number) => {    
     crossOver[col] += parseInt(crossOver[col]) + number;
+}
+
+const doubleDeckerCheck = (colour) => {
+
+    if (colour=='R') {
+        log('DD Checking Red wins '+winningGridR)
+        DDRCols = [];
+    } else {
+        log('DD Checking Yellow wins'+winningGridY)
+        DDYCols = [];
+    }
+
+     for (let col=0; col<=totalCols; col++) {
+         let row = getFreeRow(col);
+
+        //Test change R or Y
+        setGridArray(row-1,col,'F');
+        setGridArray(row,col,colour);
+
+        checkWin(colour,'TestPositions')
+
+        let newItems = null;
+        if (colour=='Y') {
+            newItems = winningGridYY.filter(n=>!winningGridY.includes(n));
+            log('DD checking column ' + col + ',YY winning spaces: ' +newItems)
+        } else {
+            newItems = winningGridRR.filter(n=>!winningGridR.includes(n));
+            log('DD checking column ' + col + ',RR winning spaces: ' +newItems)
+        }
+
+        if (colour=='R') {
+            newItems.forEach(newItem => {
+                winningGridR.forEach(oldItem => {
+                    if (newItem==oldItem+8 || newItem==oldItem-8) {
+                        addToDDArray(col,'R')
+                    }
+                })
+            })
+            // winningGridRR.forEach(oldItem => {
+            //     winningGridRR.forEach(oldItem2 => {
+            //         if (oldItem==oldItem2+8 || oldItem==oldItem2-8) {
+            //             addToDDArray(col,'R')
+            //         }
+            //     })
+            // })
+        } else if (colour=='Y') {
+            newItems.forEach(newItem => {
+                winningGridY.forEach(oldItem => {
+                    if (newItem==oldItem+8 || newItem==oldItem-8 ) {
+                        addToDDArray(col,'Y')
+                    }
+                })
+            })
+            // winningGridYY.forEach(oldItem => {
+            //     winningGridYY.forEach(oldItem2 => {
+            //         if (oldItem==oldItem2+8 || oldItem==oldItem2-8) {
+            //             addToDDArray(col,'Y')
+            //         }
+            //     })
+            // })
+        }
+
+        //Undo change
+        setGridArray(row-1,col,'B');
+        setGridArray(row,col,'F')
+
+     }
+
+}
+
+const addToDDArray = (col, colour) => {
+
+    if (getFreeRow(col)>=1 || gridArray[0][col]=='B' || gridArray[0][col]=='F)') {
+        if (!colsToAvoid.includes(col)) {
+            if (colour=='R') {
+                log('Found DD red in column '+col)
+                DDRCols.push(col);
+            } else {
+                log('Found DD yellow in column '+col)
+                DDYCols.push(col);
+            }
+        }
+    }
+
 }
