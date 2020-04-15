@@ -575,13 +575,13 @@ const doubleDeckerCheck = (colour) => {
                     }
                 })
             })
-            // winningGridRR.forEach(oldItem => {
-            //     winningGridRR.forEach(oldItem2 => {
-            //         if (oldItem==oldItem2+8 || oldItem==oldItem2-8) {
-            //             addToDDArray(col,'R')
-            //         }
-            //     })
-            // })
+            newItems.forEach(newItem => {
+                newItems.forEach(newItem2 => {
+                    if (newItem==newItem2+8 || newItem==newItem2-8) {
+                        addToDDArray(col,'R')
+                    }
+                })
+            })
         } else if (colour=='Y') {
             newItems.forEach(newItem => {
                 winningGridY.forEach(oldItem => {
@@ -590,13 +590,13 @@ const doubleDeckerCheck = (colour) => {
                     }
                 })
             })
-            // winningGridYY.forEach(oldItem => {
-            //     winningGridYY.forEach(oldItem2 => {
-            //         if (oldItem==oldItem2+8 || oldItem==oldItem2-8) {
-            //             addToDDArray(col,'Y')
-            //         }
-            //     })
-            // })
+            newItems.forEach(newItem => {
+                newItems.forEach(newItem2 => {
+                    if (newItem==newItem2+8 || newItem==newItem2-8) {
+                        addToDDArray(col,'R')
+                    }
+                })
+            })
         }
 
         //Undo change
