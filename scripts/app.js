@@ -188,12 +188,12 @@ const useTestValues = () => {
 
     gridArray.push(["B","B","B","B","B","B","B","B"]);
     gridArray.push(["B","B","B","B","B","B","B","B"]);
-    gridArray.push(["B","F","B","B","B","B","B","B"]);
-    gridArray.push(["B","R","F","B","B","B","B","B"]);
-    gridArray.push(["B","Y","R","B","B","B","B","B"]);
-    gridArray.push(["B","Y","R","B","B","B","B","B"]);
-    gridArray.push(["B","R","R","F","F","B","B","B"]);
-    gridArray.push(["F","R","Y","R","Y","F","F","F"]);
+    gridArray.push(["B","F","F","F","B","B","B","B"]);
+    gridArray.push(["B","Y","R","Y","B","B","B","B"]);
+    gridArray.push(["B","Y","Y","Y","B","B","B","B"]);
+    gridArray.push(["B","R","Y","R","B","B","B","B"]);
+    gridArray.push(["B","R","R","Y","F","B","B","B"]);
+    gridArray.push(["F","R","Y","R","R","F","F","F"]);
 
     addTestValuesToGrid();
 }
