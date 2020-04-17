@@ -3,7 +3,78 @@
 let compPicked=-1, compPickComplete=false, colsToAvoid=[], snookeredColsR=[], snookeredColsY=[], randomVar, minValue, tempArray=[], crossOver={}
 const delayBetweenTries =1000;
 let testWinFound=false, doubleDeckerCellR, doubleDeckerCellY;
-let DDRCols=[], DDYCols=[];
+let DDRCols=[], DDYCols=[]; DDWinCols=[];
+
+const computerMove = () => {
+    log("Running through computer moves");
+
+    //Choose how good a move the computer will make (generates a random % (weighted by skill)
+    minValue = parseInt(skillLevel-1) * 50;
+    randomVar= Math.floor(Math.random() * (100 - minValue)) + minValue;
+    log("Comp random skill value: "+randomVar);
+
+    //Create array of columns to avoid
+    colsToAvoid = randomVar==100 ? findColsToAvoid() : [];
+    snookered();
+    doubleDeckerCheck('R');
+    doubleDeckerCheck('Y');
+
+    compPicked=-1, compPickComplete=false;
+
+    setTimeout(function() {
+
+        //Try for yellow win
+        if (randomVar>=20) {tryStandard(4,"Y",-1,false)};
+        if (randomVar>=30) {tryDiagonals(4,"Y",-1,false)};
+        //Try for block
+        if (randomVar>=20) {tryStandard(4,"R",-1,false)};
+        if (randomVar>=40) {tryDiagonals(4,"R",-1,false)};
+
+        log('Random var' + randomVar)
+        if (randomVar>=100) {
+            playSnookerMove();
+            playDDMove();
+        };
+    
+        crossOver={};
+        for (let ii=0; ii<=totalRows; ii++) {
+            crossOver[ii]=0;
+        }
+
+        //Look for 2 in a row
+        if (randomVar>=50) {
+            let twoOrder= Math.floor(Math.random() * (4 - 1)) + 1; //Number between 1 and 3
+            if (twoOrder>=2) {
+                ['Y','R'].forEach((colour)=>{
+                    tryStandard(3,colour,-1,true);
+                    tryDiagonals(3,colour,-1,true)
+                });
+            } else {
+                ['R','Y'].forEach((colour)=>{
+                    tryStandard(3,colour,-1,true);
+                    tryDiagonals(3,colour,-1,true)
+                });
+            }
+            ['R','Y'].forEach((colour)=>{
+                tryStandard(2,colour,-1,true);
+                tryDiagonals(2,colour,-1,true)
+            });
+        };
+
+        //Play DDWinMove
+        playDDWinMove();
+
+        //Play crossover move
+        playCrossOverMove();
+
+        //Go random
+        randomMove();
+
+        //Make the move
+        addCounter(col);
+    
+    },2000) //Main pause
+}
 
 //Create array of all the potential moves which would enable a red win the following move
 const findColsToAvoid = () => {
@@ -101,74 +172,6 @@ const addSnookeredCol = (col, colour) => {
     } else {
         col>=0 && colsToAvoid.includes(col)==false ? snookeredColsY.push(col) : "";  
     }
-}
-
-const computerMove = () => {
-    log("Running through computer moves");
-
-    //Choose how good a move the computer will make (generates a random % (weighted by skill)
-    minValue = parseInt(skillLevel-1) * 50;
-    randomVar= Math.floor(Math.random() * (100 - minValue)) + minValue;
-    log("Comp random skill value: "+randomVar);
-
-    //Create array of columns to avoid
-    colsToAvoid = randomVar==100 ? findColsToAvoid() : [];
-    snookered();
-    doubleDeckerCheck('R');
-    doubleDeckerCheck('Y');
-
-    compPicked=-1, compPickComplete=false;
-
-    setTimeout(function() {
-
-        //Try for yellow win
-        if (randomVar>=20) {tryStandard(4,"Y",-1,false)};
-        if (randomVar>=30) {tryDiagonals(4,"Y",-1,false)};
-        //Try for block
-        if (randomVar>=20) {tryStandard(4,"R",-1,false)};
-        if (randomVar>=40) {tryDiagonals(4,"R",-1,false)};
-
-        //log('Random var' + randomVar)
-        if (randomVar>=100) {
-            playSnookerMove();
-            playDDMove();
-        };
-    
-        crossOver={};
-        for (let ii=0; ii<=totalRows; ii++) {
-            crossOver[ii]=0;
-        }
-
-        //Look for 2 in a row
-        if (randomVar>=50) {
-            let twoOrder= Math.floor(Math.random() * (4 - 1)) + 1; //Number between 1 and 3
-            if (twoOrder>=2) {
-                ['Y','R'].forEach((colour)=>{
-                    tryStandard(3,colour,-1,true);
-                    tryDiagonals(3,colour,-1,true)
-                });
-            } else {
-                ['R','Y'].forEach((colour)=>{
-                    tryStandard(3,colour,-1,true);
-                    tryDiagonals(3,colour,-1,true)
-                });
-            }
-            ['R','Y'].forEach((colour)=>{
-                tryStandard(2,colour,-1,true);
-                tryDiagonals(2,colour,-1,true)
-            });
-        };
-
-        //Play crossover move
-        playCrossOverMove();
-
-        //Go random
-        randomMove();
-
-        //Make the move
-        addCounter(col);
-    
-    },2000) //Main pause
 }
 
 //Parameters: No. of counters, colour, specific column (or -1 for all), if enabling opponent matters
@@ -436,7 +439,7 @@ const playDDMove = () => {
 
     if (compPickComplete==true) {return}
 
-    log('Trying DD Move ' + compPickComplete + ' DDR: ' + DDRCols +' DDY: ' + DDYCols)
+    log('Trying DD Move, DDR: ' + DDRCols +' DDY: ' + DDYCols)
 
     if (DDRCols.length>=1) {
         col = DDRCols[0]
@@ -448,6 +451,22 @@ const playDDMove = () => {
         log('Found doubledecker Y move to play in col' + col);
         compPickComplete=true;
         return col;
+    }
+}
+
+const playDDWinMove = () => {
+
+    if (compPickComplete==true) {return}
+
+    log('Trying DD Win Move, DDWinCols: ' + DDWinCols)
+
+    if (DDWinCols.length>=1) {
+        col = DDWinCols[0]
+        if (!colsToAvoid.includes(col)) {
+            log('Playing DD Win move in col' + col);
+            compPickComplete=true;
+            return col;
+        }
     }
 }
 
@@ -592,7 +611,7 @@ const doubleDeckerCheck = (colour) => {
             newItems.forEach(newItem => {
                 newItems.forEach(newItem2 => {
                     if (newItem==newItem2+8 || newItem==newItem2-8) {
-                        addToDDArray(col,'R')
+                        addToDDArray(col,'Y')
                     }
                 })
             })
@@ -603,7 +622,6 @@ const doubleDeckerCheck = (colour) => {
         setGridArray(row,col,'F')
 
      }
-
 }
 
 const addToDDArray = (col, colour) => {
