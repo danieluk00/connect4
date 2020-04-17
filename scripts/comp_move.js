@@ -407,7 +407,7 @@ const playSnookerMove = () => {
             col = snookeredColsY[i]
             for (j=0; j<snookeredColsY.length; j++) {
                 if (snookeredColsY[j] == col && i!=j) {
-                    log("Playing snookered Y col " + col)
+                    log("Found snooker move Y to play in col " + col)
                     compPickComplete=true;
                     return col;
                 }
@@ -424,7 +424,7 @@ const playSnookerMove = () => {
             col = snookeredColsR[i]
             for (j=0; j<snookeredColsR.length; j++) {
                 if (snookeredColsR[j] == col && i!=j) {
-                    log("Playing snookered R col " + col)
+                    log("Found snooker move R to play in col " + col)
                     compPickComplete=true;
                     return col;
                 }
@@ -443,12 +443,12 @@ const playDDMove = () => {
 
     if (DDRCols.length>=1) {
         col = DDRCols[0]
-        log('Playing DD R col' + col);
+        log('Found doubledecker R move to play in col' + col);
         compPickComplete=true;
         return col;
     } else if (DDYCols.length>=1) {
         col = DDYCols[0];
-        log('Playing DD Y col' + col);
+        log('Found doubledecker Y move to play in col' + col);
         compPickComplete=true;
         return col;
     }
@@ -487,7 +487,7 @@ const randomMove = () => { //Keep trying until we find a free column!
         if (gridArray[0][col]=="B" || gridArray[0][col]=="F") {
 
             if (col<=totalCols && (colsToAvoid.includes(col)==false || computerAttempts>100)) { //If we reach 100 attempts, then stop checking if we enable a win
-                log("Random column picked: "+col);
+                log("No other moves found. Random column picked: "+col);
                 return col;
             }
 
@@ -543,10 +543,9 @@ const playCrossOverMove = () => {
         }
     }
 
-    log('Crossover col '+selectedCol)
-
     if (selectedCol>-1) {
-        compPickComplete=true;
+        compPickComplete=true
+        log('Found a crossover move in col '+selectedCol)
         addCounter(selectedCol);
         return col;
     } else {
