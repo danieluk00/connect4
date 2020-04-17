@@ -56,7 +56,7 @@ let gridArray=[]; gameOver=true, turnsTaken=0, turn="R", playerTurn=true, movesT
 let hostCode, onlineGame=false, onlineRole, onlineGameState, thisplayer='R', callCount=0, redName="", yellowName="", yourName="", opponentName="", joinEvent=false, hostEvent=false, joinID="", hostID=""; //\Online game variables
 let winningGridR=[], winningGridY=[], winningGridRR=[], winningGridYY=[];
 let emptyCell=null;
-let debug=false; //Debugging
+let debug=true; //Debugging
 
 const onLoad = () => {
     gridArray = setUpGrid();
@@ -155,8 +155,11 @@ const resetVariables = () => {
         turnsTaken=0;
         compPicked=-1; //For 1 player games, the column the computer chooses
         compPickComplete = false;
-        colsToAvoid=[]
-        snookeredCols=[]
+        colsToAvoid=[];
+        snookeredColsR=[];
+        snookeredColsY=[];
+        DDRCols=[],
+        DDYCols=[];
 
         onlineGame ? onlineGameState='active' : playerTurn=false;
 

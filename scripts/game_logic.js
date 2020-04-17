@@ -15,10 +15,10 @@ grid.addEventListener('click', e => {
 })
 
 const addCounter = col => {
-    log("Adding counter to column "+col);
-
     let row=getFreeRow(col); //Get lowest free row from col selected
     if (col<0 || row<0) {return};
+
+    log("Adding counter to column "+col);
 
     getCellElement(row,col).innerHTML = turn=="Y" ? yellowCounter : redCounter; //Adds yellow/red counter image into grid cell
     turnsTaken++; //Iterates turns taken
