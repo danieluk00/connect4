@@ -1,4 +1,6 @@
 //THIS FILE LETS MOVES BE PLAYED REMOTELY
+let hostDocId = null;
+let joinDocId = null;
 
 //Enter your name
 document.querySelector('.enternametext').addEventListener('keyup', () => {
@@ -77,13 +79,14 @@ document.querySelector('.joincodetext').addEventListener('submit', e => {
 const checkValidHostCode = hostCode => {
     let hostMatched=false;
 
-    db.collection('connect4').get().then((snapshot) => {
-
-        snapshot.docs.forEach(doc => {
-            if (doc.id == hostCode+'host') {
-                hostMatched = true;
-            }
-        })
+    db.collection("connect4")
+    .where('id', "==",  hostCode)
+    .where('type', "==",  'host')
+    .onSnapshot(function(querySnapshot) {
+        if (querySnapshot.docs.length>0) {
+            hostMatched = true; 
+            hostDocId = querySnapshot.docs[0].id
+        }
 
         if (hostMatched) {
             hostCode = document.querySelector('.joincodetext').code.value;
@@ -93,6 +96,7 @@ const checkValidHostCode = hostCode => {
             animateCSS(document.querySelector('.joininputbox'),'shake','show')
         }
     })
+
 }
 
 //Sets join/host status in firebase
@@ -103,12 +107,14 @@ const setOnlineStatus = (actionType) => {
         playerName = (actionType==onlineRole) ? yourName : "";
 
         object = {
+            id: hostCode,
+            type: actionType,
             actionType,
             playerName,
             roundNumber
         }
 
-        db.collection("connect4").doc(hostCode + actionType).set(object).then(() => {
+        db.collection("connect4").doc().set(object).then(() => {
             callCount++;
         })
     }
@@ -119,13 +125,15 @@ const setOnlineColumn = col => {
 
     if (onlineGame==true && turn==thisPlayer && callCount<250) {
 
-        const now = new Date();
+        //const now = new Date();
         const object = {
+            id: hostCode,
+            type: 'move',
             column: col,
             turn: turn,
         }
 
-        db.collection("connect4").doc(hostCode+'move').set(object).then(() => {
+        db.collection("connect4").doc().set(object).then(() => {
             callCount++;
         })
     }
@@ -135,26 +143,32 @@ const createListener = () => {
     log('Creating listener for remote changes')
 
     //Listener for db changes
-    const unsub = db.collection('connect4').onSnapshot(snapshot => {
-
+    db.collection('connect4')
+    .where('id','==',hostCode)
+    .onSnapshot(snapshot => {
         snapshot.docChanges().forEach(change => {
-            const changeData = change.doc.data();
 
-            //Start game once joining player has connected
             if (change.type==='added' || change.type==='modified') {
-                if(change.doc.id==(hostCode+'join')) {
+                if(change.doc.data().type=='join') {
                     log('Join connected');
                     joinEvent=true;
+                    joinDocId = change.id
                     onlineRole=='host' && opponentName=="" ? opponentName=change.doc.data().playerName : "";
+                    if (onlineRole=='host') {
+                        deleteDoc(change.doc.id);
+                    }
                 };
-                if (change.doc.id==(hostCode+'host')) {
+                if (change.doc.data().type=='host') {
                     log('Host connected');
                     hostEvent=true;
                     onlineRole=='join' && opponentName=="" ? opponentName=change.doc.data().playerName : "";
+                    if (onlineRole=='join') {
+                        deleteDoc(change.doc.id);
+                    }
                 };
-                if (onlineGameState=='active' && change.doc.id==(hostCode+'move') && changeData.turn==turn) {
-                    let col=changeData.column;
-                    deleteDoc('connect4',change.doc.id);
+                if (onlineGameState=='active' && change.doc.data().type=='move' && change.doc.data().turn==turn) {
+                    let col=change.doc.data().column;
+                    deleteDoc(change.doc.id);
                     addCounter(col);
                 };
             };
@@ -174,10 +188,9 @@ const createListener = () => {
 
                 roundNumber==1 ? startGame() : updateCaptionText();
             }
+        })
 
-        });
-
-    });
+    })
 }
 
 const chatListener = () => {
@@ -193,7 +206,7 @@ const chatListener = () => {
                     }
 
                     updateChat(change.doc.data().name, change.doc.data().colour, change.doc.data().message);
-                    deleteDoc('connect4chats',change.doc.id)
+                    deleteChatDoc(change.doc.id)
                 
                 }
         })
@@ -248,7 +261,8 @@ const updateChat = (playerName, colour, message) => {
 }
 
 //Delete from firebase
-const deleteDoc = (collectionName, id) => db.collection(collectionName).doc(id).delete();
+const deleteDoc = (id) => db.collection('connect4').doc(id).delete();
+const deleteChatDoc = (id) => db.collection('connect4chats').doc(id).delete();
 
 //After first move, delete the host and join docs from Firebase
 const deleteJoinHostDocs = () => {
