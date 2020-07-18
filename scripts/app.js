@@ -61,6 +61,15 @@ let debug=false; //Debugging
 const onLoad = () => {
     gridArray = setUpGrid();
     getOptionsFromCookies();
+    preLoadImages();
+}
+
+const preLoadImages = () => {
+    let img=new Image();
+    img.src="assets/red.png";
+
+    let img2=new Image();
+    img2.src="assets/red.png";
 }
 
 const resetGame = () => {
